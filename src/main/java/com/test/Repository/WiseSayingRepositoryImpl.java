@@ -8,10 +8,16 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 
     private final Map<Integer, WiseSaying> storage = new HashMap<>();
     private int sequence = 0;
-    private final String DIR_PATH = "src/main/java/com/test/db";
-    private final String sequencePATH = "src/main/java/com/test/db/lastnumber.txt";
+    private final String DIR_PATH = "src/main/java/com/test/db/wiseSaying/";
+    private final String sequencePATH = DIR_PATH + "/lastid.txt";
 
-    public WiseSayingRepositoryImpl(){
+    private static final WiseSayingRepository instance = new WiseSayingRepositoryImpl(); //singleton
+
+    public static WiseSayingRepository getInstance(){
+        return instance;
+    }
+
+    private WiseSayingRepositoryImpl(){ //singleton
         try {
             memoryLoad();
             getSequence();
@@ -34,7 +40,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         }
     }
 
-    public String writeJson(WiseSaying wiseSaying){ //두 곳에서 쓸 수 있으니까 분리
+    public StringBuilder writeJson(WiseSaying wiseSaying){ //두 곳에서 쓸 수 있으니까 분리
         StringBuilder sb = new StringBuilder("");
         sb.append("{\n");
         sb.append("    \"id\": \"" + wiseSaying.getId()).append("\",\n");
@@ -42,7 +48,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         sb.append("    \"content\": \"" + wiseSaying.getContent()).append("\"\n");
         sb.append("}");
 
-        return sb.toString();
+        return sb;
     }
 
     @Override
@@ -78,7 +84,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
             String fileName = DIR_PATH + "/" + wiseSaying.getId() + ".json";
             FileWriter fw = new FileWriter(fileName);
             BufferedWriter writer = new BufferedWriter(fw);
-            writer.write(writeJson(wiseSaying));
+            writer.write(writeJson(wiseSaying).toString());
             writer.close();
         }catch (IOException e){
             throw new RuntimeException("파일을 찾을 수 없습니다.");
@@ -128,21 +134,45 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 
     @Override
     public List<WiseSaying> jsonFilesToObjects() throws IOException{
-        List<WiseSaying> jsonStorage = new ArrayList<>();
+        List<WiseSaying> objStorage = new ArrayList<>();
         File folder = new File(DIR_PATH); //디렉토리 설정
         File[] jsonFiles = folder.listFiles((dir, name) -> name.endsWith(".json")); //디렉토리에 해당하는 모든 json 파일 읽기
 
         for(File file : jsonFiles){ //각 json 파일 할당
             //여기에 함수 두기
             WiseSaying wiseSaying = jsonFileParser(file); //책임 분리
-            jsonStorage.add(wiseSaying);
+            objStorage.add(wiseSaying);
         }
 
-        return jsonStorage;
+        return objStorage;
     }
 
     @Override
     public void editFromMemory(WiseSaying wiseSaying){
         storage.put(wiseSaying.getId(), wiseSaying);
     }
+
+    public void dataBackUp(){
+        try {
+            String fileName = DIR_PATH + "/" + "data.json";
+            FileWriter fw = new FileWriter(fileName);
+            BufferedWriter writer = new BufferedWriter(fw);
+            StringBuilder sb = new StringBuilder("[");
+            List<WiseSaying> ws = findAll();
+
+            int num = 1;
+            for (WiseSaying w : ws) {
+                sb.append(writeJson(w));
+                if (num != storage.size()) sb.append(",\n");
+                num++;
+            }
+            sb.append("]");
+            writer.write(sb.toString());
+            writer.close();
+        }catch (IOException e){
+            throw new RuntimeException("파일을 찾을 수 없습니다.");
+        }
+    }
+
+
 }

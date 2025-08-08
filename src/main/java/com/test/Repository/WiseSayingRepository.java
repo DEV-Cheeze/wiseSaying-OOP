@@ -19,4 +19,6 @@ public interface WiseSayingRepository {
     WiseSaying jsonFileParser(File file) throws IOException;
     Optional<WiseSaying> findById(int id);
     void editFromMemory(WiseSaying wiseSaying);
+    void dataBackUp();
+
 }

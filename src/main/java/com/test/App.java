@@ -21,6 +21,7 @@ public class App {
             if(cmd.equals("종료")) break;
             else if(cmd.equals("등록")) wiseSayingController.assign();
             else if(cmd.equals("목록")) wiseSayingController.list();
+            else if(cmd.startsWith("빌드")) wiseSayingController.build();
             else if(cmd.startsWith("삭제")) {
                 String[] split = cmd.split("=");
                 int id = Integer.parseInt(split[1]);

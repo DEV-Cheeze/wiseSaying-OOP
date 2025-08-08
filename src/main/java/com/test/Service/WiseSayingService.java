@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class WiseSayingService {
 
-    WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
+    WiseSayingRepository wiseSayingRepository = WiseSayingRepositoryImpl.getInstance();
 
     public WiseSaying create(String content, String author){
 
@@ -58,5 +58,9 @@ public class WiseSayingService {
         wiseSayingRepository.save(wiseSaying);
     }
 
+    public String build(){
+        wiseSayingRepository.dataBackUp();
+        return "data.json 파일의 내용이 갱신되었습니다.";
 
+    }
 }

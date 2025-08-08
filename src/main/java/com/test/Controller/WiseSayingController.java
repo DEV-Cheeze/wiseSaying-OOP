@@ -65,4 +65,13 @@ public class WiseSayingController {
         }
     }
 
+    public void build() {
+        try {
+            String result = wiseSayingService.build();
+            System.out.println(result);
+        }catch(RuntimeException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
