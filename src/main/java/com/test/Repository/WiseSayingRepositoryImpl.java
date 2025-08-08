@@ -35,6 +35,17 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         }
     }
 
+    public String writeJson(WiseSaying wiseSaying){ //두 곳에서 쓸 수 있으니까 분리
+        StringBuilder sb = new StringBuilder("");
+        sb.append("{\n");
+        sb.append("    \"id\": \"" + wiseSaying.getId()).append("\",\n");
+        sb.append("    \"author\": \"" + wiseSaying.getAuthor()).append("\",\n");
+        sb.append("    \"content\": \"" + wiseSaying.getContent()).append("\"\n");
+        sb.append("}");
+
+        return sb.toString();
+    }
+
     @Override
     public void setSequence() { //파일 쓰고 나서 sequence 갱신
         try {
@@ -69,14 +80,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
             String fileName = DIR_PATH + "/" + sequence + ".json";
             FileWriter fw = new FileWriter(fileName);
             BufferedWriter writer = new BufferedWriter(fw);
-
-            StringBuilder sb = new StringBuilder("");
-            sb.append("{\n");
-            sb.append("    \"id\": \"" + wiseSaying.getId()).append("\",\n");
-            sb.append("    \"author\": \"" + wiseSaying.getAuthor()).append("\",\n");
-            sb.append("    \"content\": \"" + wiseSaying.getContent()).append("\"\n");
-            sb.append("}");
-            writer.write(sb.toString());
+            writer.write(writeJson(wiseSaying));
             writer.close();
         }catch (IOException e){
             throw new RuntimeException("파일을 찾을 수 없습니다.");
