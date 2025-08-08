@@ -5,6 +5,7 @@ import com.test.Repository.WiseSayingRepositoryImpl;
 import com.test.domain.WiseSaying;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class WiseSayingService {
@@ -39,14 +40,22 @@ public class WiseSayingService {
     }
 
     public int deleteWiseSaying(int id){
-        findOne(id).orElseThrow(() -> new IllegalArgumentException(id + "번 명언은 존재하지 않습니다."));
+        findWiseSaying(id);
         wiseSayingRepository.delete(id);
         wiseSayingRepository.deleteFromMemory(id);
         return id;
     }
 
-    public Optional<WiseSaying> findOne(int id){
-        return wiseSayingRepository.findById(id);
+    public WiseSaying findWiseSaying(int id){
+        return wiseSayingRepository.findById(id).orElseThrow(() -> new NoSuchElementException(id + "번 명언은 존재하지 않습니다."));
+    }
+
+    public void modify(int id, String content, String author){
+
+        isValidateObject(content, author);
+        WiseSaying wiseSaying = new WiseSaying(id, content, author);
+        wiseSayingRepository.editFromMemory(wiseSaying);
+        wiseSayingRepository.save(wiseSaying);
     }
 
 

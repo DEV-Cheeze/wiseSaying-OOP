@@ -25,6 +25,10 @@ public class App {
                 String[] split = cmd.split("=");
                 int id = Integer.parseInt(split[1]);
                 wiseSayingController.delete(id);
+            }else if(cmd.startsWith("수정")) {
+                String[] split = cmd.split("=");
+                int id = Integer.parseInt(split[1]);
+                wiseSayingController.modify(id);
             }
         }
 

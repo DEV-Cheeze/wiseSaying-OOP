@@ -1,10 +1,8 @@
 package com.test.Repository;
 
 import com.test.domain.WiseSaying;
-
 import java.io.*;
 import java.util.*;
-import java.util.Optional;
 
 public class WiseSayingRepositoryImpl implements WiseSayingRepository {
 
@@ -57,7 +55,6 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         }catch (IOException e){
             throw new RuntimeException("파일을 찾을 수 없습니다.");
         }
-
     }
 
     @Override
@@ -76,9 +73,9 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
     }
 
     @Override
-    public void save(WiseSaying wiseSaying) { //파일만 쓰기
+    public void save(WiseSaying wiseSaying) { //파일만 쓰기 (덮어쓰기 가능, create, edit 둘다 가능)
         try {
-            String fileName = DIR_PATH + "/" + sequence + ".json";
+            String fileName = DIR_PATH + "/" + wiseSaying.getId() + ".json";
             FileWriter fw = new FileWriter(fileName);
             BufferedWriter writer = new BufferedWriter(fw);
             writer.write(writeJson(wiseSaying));
@@ -144,4 +141,8 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         return jsonStorage;
     }
 
+    @Override
+    public void editFromMemory(WiseSaying wiseSaying){
+        storage.put(wiseSaying.getId(), wiseSaying);
+    }
 }
