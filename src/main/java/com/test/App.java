@@ -14,15 +14,17 @@ public class App {
 
         WiseSayingController wiseSayingController = new WiseSayingController();
 
-        loop:
         while(true){
             System.out.print("명령) ");
-            switch (br.readLine()) {
-                case "종료":
-                    break loop;
-                case "등록":
-                    wiseSayingController.assign();
-                    break;
+            String cmd = br.readLine();
+
+            if(cmd.equals("종료")) break;
+            else if(cmd.equals("등록")) wiseSayingController.assign();
+            else if(cmd.equals("목록")) wiseSayingController.list();
+            else if(cmd.startsWith("삭제")) {
+                String[] split = cmd.split("=");
+                int id = Integer.parseInt(split[1]);
+                wiseSayingController.delete(id);
             }
         }
 

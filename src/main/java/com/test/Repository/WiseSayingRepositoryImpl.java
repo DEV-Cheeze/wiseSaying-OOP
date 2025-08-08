@@ -30,6 +30,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
             while((line = br.readLine()) != null){
                 sequence = Integer.parseInt(line);
             }
+            br.close();
         }catch (IOException e){
             throw new RuntimeException("파일을 찾을 수 없습니다.");
         }
@@ -87,13 +88,25 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         }
     }
 
+    public void deleteFromMemory(int id){
+        storage.remove(id);
+    }
+
     @Override
-    public void deleteById(int id) {
+    public void delete(int id) {
+        String delFilePath = DIR_PATH + "/" + id + ".json";
+        File file = new File(delFilePath);
+        file.delete();
     }
 
     @Override
     public Optional<WiseSaying> findById(int id) {
-        return Optional.empty();
+        return Optional.ofNullable(storage.get(id));
+    }
+
+    @Override
+    public List<WiseSaying> findAll(){
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -112,6 +125,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository {
         String author = result[1].split(":")[1].trim();
         String content = result[2].split(":")[1].trim();
 
+        br.close();
         return new WiseSaying(id, author, content);
     }
 

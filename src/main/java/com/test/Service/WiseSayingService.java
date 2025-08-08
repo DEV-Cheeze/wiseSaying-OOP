@@ -4,6 +4,9 @@ import com.test.Repository.WiseSayingRepository;
 import com.test.Repository.WiseSayingRepositoryImpl;
 import com.test.domain.WiseSaying;
 
+import java.util.List;
+import java.util.Optional;
+
 public class WiseSayingService {
 
     WiseSayingRepository wiseSayingRepository = new WiseSayingRepositoryImpl();
@@ -31,7 +34,20 @@ public class WiseSayingService {
     }
 
 
+    public List<WiseSaying> findAllWiseSayings(){
+        return wiseSayingRepository.findAll();
+    }
 
+    public int deleteWiseSaying(int id){
+        findOne(id).orElseThrow(() -> new IllegalArgumentException(id + "번 명언은 존재하지 않습니다."));
+        wiseSayingRepository.delete(id);
+        wiseSayingRepository.deleteFromMemory(id);
+        return id;
+    }
+
+    public Optional<WiseSaying> findOne(int id){
+        return wiseSayingRepository.findById(id);
+    }
 
 
 }
