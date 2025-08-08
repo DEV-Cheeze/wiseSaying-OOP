@@ -1,13 +1,18 @@
 package com.test.domain;
 
-public class wiseSaying {
+public class WiseSaying {
 
     private int id;
     private String author;
     private String content;
 
-    public wiseSaying(int id, String author, String content) {
+    public WiseSaying(int id, String author, String content) {
         this.id = id;
+        this.author = author;
+        this.content = content;
+    }
+
+    public WiseSaying(String author, String content) {
         this.author = author;
         this.content = content;
     }
